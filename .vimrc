@@ -1,17 +1,38 @@
 filetype plugin on
+
+set nocompatible
+syntax on
+set number
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set noexpandtab!
+set backspace=2 
+set t_Co=256
+set background=light
+
 "
 "
 "install VimPlug if it doesn't exist
 
-if empty(glob("~/.vim/autoload/plug.vim"))
-        call system("curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim")
+let vimPlugDir = ""
+let vimPlugInstall = ""
+if has('win32')
+    let vimPlugDir = "$HOME/vimfiles/autoload/"
+    let vimPlugInstall = "powershell mkdir " . vimPlugDir . "; curl -Uri https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim -OutFile $HOME/vimfiles/autoload/plug.vim"
+else 
+    let vimPlugDir = "$HOME/.vim/autoload"
+    let vimPlugInstall = "curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+endif
+if empty(glob(vimPlugDir . "/plug.vim"))
+    call system(vimPlugInstall)
 endif
 
-let g:OmniSharp_host = "http://localhost:2000""
-set nocompatible
+let g:OmniSharp_host = "http://localhost:4111""
 
 "Begin VimPlug
-call plug#begin("~/.vim/plugged/")
+call plug#begin("$HOME/.vim/plugged/")
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'fatih/vim-go'
 Plug 'scrooloose/syntastic'
 Plug 'Valloric/YouCompleteMe', {'do' : './install.py'}
@@ -21,11 +42,17 @@ Plug 'OmniSharp/omnisharp-vim', {'do' : 'xbuild ./server/OmniSharp.sln && ./omni
 Plug 'garyburd/go-explorer'
 Plug 'elzr/vim-json'
 Plug 'suan/vim-instant-markdown', {'do' : 'npm -g install instant-markdown-d'}
+Plug 'vim-ruby/vim-ruby'
+Plug 'pangloss/vim-javascript'
+Plug 'leafgarland/typescript-vim'
 call plug#end()
 
 "Begin YouCompleteMe settings
 "========================
+"
 
+let g:ycm_server_use_vim_stdout = 0
+let g:ycm_server_keep_logfiles = 1
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g   :YcmCompleter GoToDefinitionElseDeclaration<CR>
 "End YouCompleteMe settings
@@ -51,40 +78,17 @@ let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
-"Python Stuff
-"==============
-let g:syntastic_python_python_exec = '/path/to/python3'
-let g:syntastic_python_checkers = ['pylint']
-
-au BufNewFile, BufRead *.py
-    \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
-    \ set textwidth=79
-    \ set expandtab
-    \ set autoindent
-    \ set fileformat=unix
-    \ set encoding=utf-8
-
-
-"VirtualEnv Support
-"=================
-py << EOF
-import os
-import sys
-if 'VIRTUAL_ENV' in os.environ:
-   project_base_dir = os.environ['VIRTUAL_ENV']
-   activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-   execfile(activate_this, dict(__file__=activate_this))
-EOF
+au FileType go nmap <Leader>ds <Plug>(go-def-split)
+au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+au FileType go nmap <Leader>dt <Plug>(go-def-tab)
 
 " Get Code Issues and syntax errors
 let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
 " If you are using the omnisharp-roslyn backend, use the following
 " let g:syntastic_cs_checkers = ['code_checker']
 augroup omnisharp_commands
-    autocmd!
 
+    autocmd!
     " Synchronous build (blocks Vim)
     "autocmd FileType cs nnoremap <F5> :wa!<cr>:OmniSharpBuild<cr>
     " Builds can also run asynchronously with vim-dispatch installed
@@ -119,17 +123,17 @@ augroup omnisharp_commands
 
 augroup END
 
+
+
 "Begin vim-markdow
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'go', 'objc']
 
+"Change vim windows
+nmap <silent> <A-j> :wincmd j<CR> 
+nmap <silent> <A-l> :wincmd k<CR> 
+nmap <silent> <A-h> :wincmd h<CR> 
+nmap <silent> <A-l> :wincmd l<CR> 
 
-"Common
-syntax on
-:set number
-:set expandtab
-:set tabstop=4
-:color darkblue 
-set backspace=2 
 
 "Change working directory
 map <C-c><C-d> :cd %:p:h
