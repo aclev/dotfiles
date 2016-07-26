@@ -1,22 +1,26 @@
-export GOPATH="$HOME/go"
-export GOROOT="/usr/local/opt/go/libexec"
+export GOPATH=$HOME/golang
+alias vim=/usr/local/Cellar/vim/7.4.1257/bin/vim
+export PATH=$GOPATH/bin:$HOME/tools:$(brew --prefix nginx)/bin/:$HOME/.rbenv/shims/:$PATH
 
-alias vimrc="vim $HOME/.vimrc"
-alias profile="vim $HOME/.bash_profile"
-alias python='python3'
+export NVM_DIR=~/.nvm
+  . $(brew --prefix nvm)/nvm.sh
 
-set editing-mode vim
+removeTabs(){
+    ruby -pe '$_.gsub!(/\t/,"    ")' < $argv[0] > $argv[1].new
+    mv $argv[0].new $argv[0]
+}    
 
-export PATH="/usr/local/bin:./:$HOME/.cabal/bin:$HOME/Library/Haskell/bin:$HOME/.vim/bundle/syntastic/syntax_checkers/python:/Applications/MacVim-snapshot-73/:$GOPATH/bin:$GOROOT/bin:$PATH"
+gitAddRemoveTabs() {
+    removeTabs $1
+    git add $1
+}
 
-export WORKON_HOME=$HOME/.virtualenvs
-source /usr/local/bin/virtualenvwrapper.sh
-export PIP_VIRTUALENV_BASE=$WORKON_HOME
-
-export PATH
-
-[ -s "/Users/acelevenberg/.dnx/dnvm/dnvm.sh" ] && . "/Users/acelevenberg/.dnx/dnvm/dnvm.sh" # Load dnvm
+alias retab=removeTabs
+alias gant=gitAddRemoveTabs
 
 if command -v tmux>/dev/null; then
-          [[ ! $TERM =~ screen ]] && [ -z $TMUX ] && exec tmux
+              [[ ! $TERM =~ screen ]] && [ -z $TMUX ] && exec tmux
 fi
+
+[ -s "/Users/ace/.dnx/dnvm/dnvm.sh" ] && . "/Users/ace/.dnx/dnvm/dnvm.sh" # Load dnvm
+eval "$(rbenv init -)"
