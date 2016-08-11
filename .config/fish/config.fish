@@ -3,12 +3,16 @@ function fish_user_key_bindings
 end
 
 function remove_tabs
-    ruby -pe '$_.gsub!(/\t/,"    ")' < $argv[0] > $argv[0].new
-    mv $argv[0].new $argv[0]
+    ruby -pe '$_.gsub!(/\t/,"    ")' < $argv > $argv.new
+    mv $argv.new $argv
 end
 
 function gant
-    remove_tabs $argv[0]
-    git add $argv[0]
+    remove_tabs $argv
+    git add $argv
+end
+
+function foo
+    echo $argv[0]
 end
 
