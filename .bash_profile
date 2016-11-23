@@ -7,7 +7,8 @@ alias python='python3'
 
 set editing-mode vim
 
-export PATH="/usr/local/bin:./:$HOME/.cabal/bin:$HOME/Library/Haskell/bin:$HOME/.vim/bundle/syntastic/syntax_checkers/python:/Applications/MacVim-snapshot-73/:$GOPATH/bin:$GOROOT/bin:$PATH"
+export PATH="/Users/acelevenberg/.cargo/bin:/usr/local/bin:./:$HOME/.cabal/bin:$HOME/Library/Haskell/bin:$HOME/.vim/bundle/syntastic/syntax_checkers/python:/Applications/MacVim-snapshot-73/:$GOPATH/bin:$GOROOT/bin:$PATH"
+export RUST_SRC_PATH="/Users/acelevenberg/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src"
 
 export WORKON_HOME=$HOME/.virtualenvs
 source /usr/local/bin/virtualenvwrapper.sh
@@ -20,3 +21,4 @@ export PATH
 if command -v tmux>/dev/null; then
           [[ ! $TERM =~ screen ]] && [ -z $TMUX ] && exec tmux
 fi
+exec fish

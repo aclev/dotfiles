@@ -12,6 +12,7 @@ set nocompatible
 
 "Begin VimPlug
 call plug#begin("~/.vim/plugged/")
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'fatih/vim-go'
 Plug 'scrooloose/syntastic'
 Plug 'Valloric/YouCompleteMe', {'do' : './install.py'}
@@ -21,6 +22,8 @@ Plug 'OmniSharp/omnisharp-vim', {'do' : 'xbuild ./server/OmniSharp.sln && ./omni
 Plug 'garyburd/go-explorer'
 Plug 'elzr/vim-json'
 Plug 'suan/vim-instant-markdown', {'do' : 'npm -g install instant-markdown-d'}
+Plug 'rust-lang/rust.vim'
+Plug 'racer-rust/vim-racer'
 call plug#end()
 
 "Begin YouCompleteMe settings
@@ -39,6 +42,13 @@ set foldlevel=99
 set shell=bash
 "some bell thing for MavVim, not sure what is does
 set vb
+
+"Rust stuff
+"=========
+set hidden
+let g:racer_cmd = "~/.cargo/bin/racer" 
+let g:racer_experimental_completer = 1
+
 
 "GoLang Stuff
 "===========
@@ -118,6 +128,10 @@ augroup omnisharp_commands
     autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
 
 augroup END
+nmap <silent> <A-j> :wincmd j<CR> 
+nmap <silent> <A-l> :wincmd k<CR> 
+nmap <silent> <A-h> :wincmd h<CR> 
+nmap <silent> <A-l> :wincmd l<CR> 
 
 "Begin vim-markdow
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'go', 'objc']
@@ -128,7 +142,6 @@ syntax on
 :set number
 :set expandtab
 :set tabstop=4
-:color darkblue 
 set backspace=2 
 
 "Change working directory
