@@ -28,21 +28,21 @@ if empty(glob(vimPlugDir . "/plug.vim"))
 endif
 
 let g:OmniSharp_host = "http://localhost:4111""
+let g:OmniSharp_server_type = 'roslyn'
 
 "Begin VimPlug
 call plug#begin("$HOME/.vim/plugged/")
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'OmniSharp/omnisharp-vim', {'do' : 'cd server && xbuild'}
 Plug 'fatih/vim-go'
 Plug 'scrooloose/syntastic'
-Plug 'Valloric/YouCompleteMe', {'do' : './install.py'}
+Plug 'Valloric/YouCompleteMe', {'do' : './install.py --all'}
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-markdown'
 Plug 'garyburd/go-explorer'
 Plug 'elzr/vim-json'
 Plug 'suan/vim-instant-markdown', {'do' : 'npm -g install instant-markdown-d'}
 Plug 'vim-ruby/vim-ruby'
-Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
 call plug#end()
 
 "Begin YouCompleteMe settings
@@ -55,8 +55,6 @@ let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g   :YcmCompleter GoToDefinitionElseDeclaration<CR>
 "End YouCompleteMe settings
 "========================
-
-let pyhton_highlight_all=1
 
 "enable folding
 set foldmethod=indent
