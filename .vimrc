@@ -1,5 +1,4 @@
 filetype plugin on
-
 set nocompatible
 syntax on
 set number
@@ -9,6 +8,7 @@ set expandtab
 set backspace=2 
 set t_Co=256
 set background=light
+set clipboard=unnamed
 
 "
 "
@@ -36,13 +36,18 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'OmniSharp/omnisharp-vim', {'do' : 'cd server && xbuild'}
 Plug 'fatih/vim-go'
 Plug 'scrooloose/syntastic'
-Plug 'Valloric/YouCompleteMe', {'do' : './install.py --all'}
+Plug 'Valloric/YouCompleteMe', {'do' : './install.py'}
+Plug 'guns/vim-clojure-static'
+Plug 'tpope/vim-fireplace'
+Plug 'venantius/vim-cljfmt'
+Plug 'venantius/vim-eastwood'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'tpope/vim-salve'
+Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-dispatch'
-Plug 'tpope/vim-markdown'
 Plug 'garyburd/go-explorer'
 Plug 'elzr/vim-json'
 Plug 'suan/vim-instant-markdown', {'do' : 'npm -g install instant-markdown-d'}
-Plug 'vim-ruby/vim-ruby'
 call plug#end()
 
 "Begin YouCompleteMe settings
@@ -53,6 +58,7 @@ let g:ycm_server_use_vim_stdout = 0
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g   :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let g:ycm_semantic_triggers = {'clojure' : ['/', '(']}
 "End YouCompleteMe settings
 "========================
 
@@ -66,7 +72,6 @@ set vb
 "GoLang Stuff
 "===========
 let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
@@ -79,7 +84,19 @@ au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
 au FileType go nmap <Leader>dt <Plug>(go-def-tab)
 
 " Get Code Issues and syntax errors
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+
 let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
+let g:syntastic_clojure_checkers = ['eastwood']
+
 
 "Begin vim-markdow
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'go', 'objc']
