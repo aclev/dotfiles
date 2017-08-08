@@ -8,32 +8,11 @@ set expandtab
 set backspace=2 
 set t_Co=256
 set background=light
-set clipboard=unnamed
 
-"
-"
-"install VimPlug if it doesn't exist
-
-let vimPlugDir = ""
-let vimPlugInstall = ""
-if has('win32')
-    let vimPlugDir = "$HOME/vimfiles/autoload/"
-    let vimPlugInstall = "powershell mkdir " . vimPlugDir . "; curl -Uri https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim -OutFile $HOME/vimfiles/autoload/plug.vim"
-else 
-    let vimPlugDir = "$HOME/.vim/autoload"
-    let vimPlugInstall = "curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-endif
-if empty(glob(vimPlugDir . "/plug.vim"))
-    call system(vimPlugInstall)
-endif
-
-let g:OmniSharp_host = "http://localhost:4111""
-let g:OmniSharp_server_type = 'roslyn'
 
 "Begin VimPlug
 call plug#begin("$HOME/.vim/plugged/")
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'OmniSharp/omnisharp-vim', {'do' : 'cd server && xbuild'}
 Plug 'fatih/vim-go'
 Plug 'scrooloose/syntastic'
 Plug 'Valloric/YouCompleteMe', {'do' : './install.py'}
@@ -58,7 +37,7 @@ let g:ycm_server_use_vim_stdout = 0
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g   :YcmCompleter GoToDefinitionElseDeclaration<CR>
-let g:ycm_semantic_triggers = {'clojure' : ['/', '(']}
+let g:ycm_semantic_triggers = {'clojure' : ['/', '(', "."]}
 "End YouCompleteMe settings
 "========================
 
