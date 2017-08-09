@@ -4,7 +4,7 @@
 DOTFILES=~/.dotfiles
 
 # All of the packages that are installed via brew.
-BREW_PACKAGES=(fish tmux lein go cmake reattach-to-user-namespace jq watch)
+BREW_PACKAGES=(fish tmux leiningen go cmake reattach-to-user-namespace jq watch)
 
 if [ ! -e /Applications/iTerm.app ]; then
     echo "Could not find iTerm, downloading"
