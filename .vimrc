@@ -1,40 +1,45 @@
 filetype plugin on
-"
-"
-"install VimPlug if it doesn't exist
-
-if empty(glob("~/.vim/autoload/plug.vim"))
-        call system("curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim")
-endif
-
-let g:OmniSharp_host = "http://localhost:2000""
 set nocompatible
+syntax on
+set number
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set backspace=2 
+set t_Co=256
+set background=light
+
 
 "Begin VimPlug
-call plug#begin("~/.vim/plugged/")
+call plug#begin("$HOME/.vim/plugged/")
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'fatih/vim-go'
 Plug 'scrooloose/syntastic'
-Plug 'Valloric/YouCompleteMe', {'do' : './install.py'}
+Plug 'Valloric/YouCompleteMe', {'do' : './install.py --gocode-completer'}
+Plug 'guns/vim-clojure-static'
+Plug 'tpope/vim-fireplace'
+Plug 'venantius/vim-cljfmt'
+Plug 'venantius/vim-eastwood'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'tpope/vim-salve'
+Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-dispatch'
-Plug 'tpope/vim-markdown'
-Plug 'OmniSharp/omnisharp-vim', {'do' : 'xbuild ./server/OmniSharp.sln && ./omnisharp-roslyn/build.sh'}
 Plug 'garyburd/go-explorer'
 Plug 'elzr/vim-json'
-Plug 'suan/vim-instant-markdown', {'do' : 'npm -g install instant-markdown-d'}
-Plug 'rust-lang/rust.vim'
-Plug 'racer-rust/vim-racer'
+Plug 'JamshedVesuna/vim-markdown-preview'
 call plug#end()
 
 "Begin YouCompleteMe settings
 "========================
+"
 
+let g:ycm_server_use_vim_stdout = 0
+let g:ycm_server_keep_logfiles = 1
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g   :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let g:ycm_semantic_triggers = {'clojure' : ['/', '(', "."]}
 "End YouCompleteMe settings
 "========================
-
-let pyhton_highlight_all=1
 
 "enable folding
 set foldmethod=indent
@@ -53,7 +58,6 @@ let g:racer_experimental_completer = 1
 "GoLang Stuff
 "===========
 let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
@@ -61,88 +65,40 @@ let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
-"Python Stuff
-"==============
-let g:syntastic_python_python_exec = '/path/to/python3'
-let g:syntastic_python_checkers = ['pylint']
-
-au BufNewFile, BufRead *.py
-    \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
-    \ set textwidth=79
-    \ set expandtab
-    \ set autoindent
-    \ set fileformat=unix
-    \ set encoding=utf-8
-
-
-"VirtualEnv Support
-"=================
-py << EOF
-import os
-import sys
-if 'VIRTUAL_ENV' in os.environ:
-   project_base_dir = os.environ['VIRTUAL_ENV']
-   activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-   execfile(activate_this, dict(__file__=activate_this))
-EOF
+au FileType go nmap <Leader>ds <Plug>(go-def-split)
+au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+au FileType go nmap <Leader>dt <Plug>(go-def-tab)
 
 " Get Code Issues and syntax errors
-let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
-" If you are using the omnisharp-roslyn backend, use the following
-" let g:syntastic_cs_checkers = ['code_checker']
-augroup omnisharp_commands
-    autocmd!
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
-    " Synchronous build (blocks Vim)
-    "autocmd FileType cs nnoremap <F5> :wa!<cr>:OmniSharpBuild<cr>
-    " Builds can also run asynchronously with vim-dispatch installed
-    autocmd FileType cs nnoremap <leader>b :wa!<cr>:OmniSharpBuildAsync<cr>
-    " automatic syntax check on events (TextChanged requires Vim 7.4)
-    autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+let g:syntastic_clojure_checkers = ['eastwood']
 
-    " Automatically add new cs files to the nearest project on save
-    autocmd BufWritePost *.cs call OmniSharp#AddToProject()
-
-    "show type information automatically when the cursor stops moving
-    autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
-
-    "The following commands are contextual, based on the current cursor position.
-
-    autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
-    autocmd FileType cs nnoremap <leader>fi :OmniSharpFindImplementations<cr>
-    autocmd FileType cs nnoremap <leader>ft :OmniSharpFindType<cr>
-    autocmd FileType cs nnoremap <leader>fs :OmniSharpFindSymbol<cr>
-    autocmd FileType cs nnoremap <leader>fu :OmniSharpFindUsages<cr>
-    "finds members in the current buffer
-    autocmd FileType cs nnoremap <leader>fm :OmniSharpFindMembers<cr>
-    " cursor can be anywhere on the line containing an issue
-    autocmd FileType cs nnoremap <leader>x  :OmniSharpFixIssue<cr>
-    autocmd FileType cs nnoremap <leader>fx :OmniSharpFixUsings<cr>
-    autocmd FileType cs nnoremap <leader>tt :OmniSharpTypeLookup<cr>
-    autocmd FileType cs nnoremap <leader>dc :OmniSharpDocumentation<cr>
-    "navigate up by method/property/field
-    autocmd FileType cs nnoremap <C-K> :OmniSharpNavigateUp<cr>
-    "navigate down by method/property/field
-    autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
-
-augroup END
 nmap <silent> <A-j> :wincmd j<CR> 
 nmap <silent> <A-l> :wincmd k<CR> 
 nmap <silent> <A-h> :wincmd h<CR> 
 nmap <silent> <A-l> :wincmd l<CR> 
 
-"Begin vim-markdow
+
+" Markdown settings
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'go', 'objc']
+let vim_markdown_preview_github=1
+let vim_markdown_preview_browser='Google Chrome'
+" Preview on write
+let vim_markdown_preview_toggle=2
 
-
-"Common
-syntax on
-:set number
-:set expandtab
-:set tabstop=4
-set backspace=2 
+"Change vim windows
+nmap <silent> <A-j> :wincmd j<CR> 
+nmap <silent> <A-l> :wincmd k<CR> 
+nmap <silent> <A-h> :wincmd h<CR> 
+nmap <silent> <A-l> :wincmd l<CR> 
 
 "Change working directory
 map <C-c><C-d> :cd %:p:h
