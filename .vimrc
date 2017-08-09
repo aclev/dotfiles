@@ -26,6 +26,7 @@ Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-dispatch'
 Plug 'garyburd/go-explorer'
 Plug 'elzr/vim-json'
+Plug 'JamshedVesuna/vim-markdown-preview'
 call plug#end()
 
 "Begin YouCompleteMe settings
@@ -76,8 +77,12 @@ let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
 let g:syntastic_clojure_checkers = ['eastwood']
 
 
-"Begin vim-markdow
+" Markdown settings
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'go', 'objc']
+let vim_markdown_preview_github=1
+let vim_markdown_preview_browser='Google Chrome'
+" Preview on write
+let vim_markdown_preview_toggle=2
 
 "Change vim windows
 nmap <silent> <A-j> :wincmd j<CR> 
