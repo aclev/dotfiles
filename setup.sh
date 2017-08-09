@@ -56,6 +56,13 @@ then
     echo "installed reattach-to-user-namespace"
 fi
 
+if ! which lein > /dev/null
+then
+    echo "Couldn't find leiningen, installing"
+    brew install leiningen
+    echo "installed leiningen"
+fi
+
 if ! which go > /dev/null
 then
     echo "Couldn't find go, installing"
@@ -92,7 +99,7 @@ then
             if [ ! -L ~/$filename ]
             then
                 echo "creating symlink for $filename"
-                ln -s file ~/$filename
+                ln -s $file ~/$filename
             fi
         fi
     done
