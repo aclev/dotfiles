@@ -15,7 +15,7 @@ call plug#begin("$HOME/.vim/plugged/")
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'fatih/vim-go'
 Plug 'scrooloose/syntastic'
-Plug 'Valloric/YouCompleteMe', {'do' : './install.py'}
+Plug 'Valloric/YouCompleteMe', {'do' : './install.py --gocode-completer'}
 Plug 'guns/vim-clojure-static'
 Plug 'tpope/vim-fireplace'
 Plug 'venantius/vim-cljfmt'
@@ -26,7 +26,6 @@ Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-dispatch'
 Plug 'garyburd/go-explorer'
 Plug 'elzr/vim-json'
-Plug 'suan/vim-instant-markdown', {'do' : 'npm -g install instant-markdown-d'}
 call plug#end()
 
 "Begin YouCompleteMe settings
