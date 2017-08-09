@@ -15,6 +15,19 @@ if [ ! -e /Applications/iTerm.app ]; then
     echo "Installed iTerm"
 fi
 
+# Make iterm read preferences from the dotfiles dir instead of /Application Support
+# iTerm2 just checks in the user defaults for LoadPrefsFromCustomFolder, which doesn't 
+# exist if false.  So just check to make sure that default is set, if it isn't set it
+# and also set the location of the settings file 
+
+defaults read com.googlecode.iterm2.plist LoadPrefsFromCustomFolder | grep "0" 2> /dev/null 
+if [ $? == 0 ]; then
+    echo "Iterm isn't reading from settings directory, setting it to read from ~/.dotfiles/settings/ now"
+    defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder 1
+    defaults write com.googlecode.iterm2.plist PrefsCustomFolder ~/.dotfiles/settings/
+    echo "Done setting iTerm prefs"
+fi
+
 if [ ! -x /usr/local/bin/brew ]; then
     echo "Could not find brew, installing"
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -61,6 +74,8 @@ if [ -d $DOTFILES ]; then
         # Don't check for a few files
         if [ ! $filename == "." ] &&
            [ ! $filename == ".." ] &&
+           [ ! $filename == ".gitignore" ] &&
+           [ ! $filename == "settings" ] &&
            [ ! $filename == ".git" ]; then
             if [ ! -L ~/$filename ] && [ ! -f ~/$filename ]; then
                 echo "creating symlink for $filename"
