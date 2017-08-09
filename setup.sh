@@ -62,7 +62,7 @@ if [ -d $DOTFILES ]; then
         if [ ! $filename == "." ] &&
            [ ! $filename == ".." ] &&
            [ ! $filename == ".git" ]; then
-            if [ ! -L ~/$filename ]; then
+            if [ ! -L ~/$filename ] && [ ! -f ~/$filename ]; then
                 echo "creating symlink for $filename"
                 ln -s $file ~/$filename
             fi
