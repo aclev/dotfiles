@@ -6,6 +6,16 @@ DOTFILES=~/.dotfiles
 # All of the packages that are installed via brew.
 BREW_PACKAGES=(fish tmux leiningen go cmake reattach-to-user-namespace jq watch grip)
 
+isBrewPackageInstalled()
+{
+    p=$1
+    if [ $p == "leiningen" ]; then 
+        p=lein 
+    fi
+    which $p > /dev/null
+    return $?
+}
+
 if [ ! -e /Applications/iTerm.app ]; then
     echo "Could not find iTerm, downloading"
     curl -o ~/iterm.zip https://iterm2.com/downloads/stable/iTerm2-3_0_15.zip
@@ -47,7 +57,7 @@ if [ ! -f ~/.vim/autoload/plug.vim ]; then
 fi
 
 for package in "${BREW_PACKAGES[@]}"; do
-    if ! which $package > /dev/null; then
+    if ! isBrewPackageInstalled $package; then
         echo "Cound't find $package, installing with brew"
         brew install $package
         echo "Installed $package"
