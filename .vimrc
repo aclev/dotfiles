@@ -48,13 +48,6 @@ set shell=bash
 "some bell thing for MavVim, not sure what is does
 set vb
 
-"Rust stuff
-"=========
-set hidden
-let g:racer_cmd = "~/.cargo/bin/racer" 
-let g:racer_experimental_completer = 1
-
-
 "GoLang Stuff
 "===========
 let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
