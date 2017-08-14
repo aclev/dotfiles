@@ -25,6 +25,16 @@ if [ ! -e /Applications/iTerm.app ]; then
     echo "Installed iTerm"
 fi
 
+if [ ! -e /Applications/Docker.app ]; then
+    echo "Could not find Docker, downloading"
+    curl -o ~/docker.dmg https://download.docker.com/mac/stable/Docker.dmg
+    hdiutil attach ~/docker.dmg
+    cp -r /Volumes/Docker/Docker.app /Applications
+    hdiutil detach /Volumes/Docker
+    rm ~/docker.dmg
+    echo "Installed docker to appliations folder"
+fi
+
 # Make iterm read preferences from the dotfiles dir instead of /Application Support
 # iTerm2 just checks in the user defaults for LoadPrefsFromCustomFolder, which doesn't 
 # exist if false.  So just check to make sure that default is set, if it isn't set it
