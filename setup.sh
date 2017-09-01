@@ -4,13 +4,16 @@
 DOTFILES=~/.dotfiles
 
 # All of the packages that are installed via brew.
-BREW_PACKAGES=(fish tmux leiningen go cmake reattach-to-user-namespace jq watch grip)
+BREW_PACKAGES=(fish vault awscli tmux leiningen go cmake reattach-to-user-namespace jq watch grip)
 
 isBrewPackageInstalled()
 {
     p=$1
     if [ $p == "leiningen" ]; then 
         p=lein 
+    fi
+    if [ $p == "awscli" ]; then
+        p=aws
     fi
     which $p > /dev/null
     return $?
@@ -64,6 +67,12 @@ if [ ! -f ~/.vim/autoload/plug.vim ]; then
     echo "Could not find vim-plug, installing"
     curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     echo "installed vim plug"
+fi
+
+if [ which omf 2> /dev/null ]; then
+    echo "Could not find oh my fish, installing"
+    curl -L http://get.oh-my.fish | fish
+    echo "Installed oh my fish"
 fi
 
 for package in "${BREW_PACKAGES[@]}"; do

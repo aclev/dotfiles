@@ -6,9 +6,7 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 set backspace=2 
-set t_Co=256
-set background=light
-
+"set background=dark
 
 "Begin VimPlug
 call plug#begin("$HOME/.vim/plugged/")
@@ -21,13 +19,31 @@ Plug 'tpope/vim-fireplace'
 Plug 'venantius/vim-cljfmt'
 Plug 'venantius/vim-eastwood'
 Plug 'kien/rainbow_parentheses.vim'
+Plug 'vim-scripts/paredit.vim'
 Plug 'tpope/vim-salve'
-Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-surround'
 Plug 'tpope/vim-dispatch'
 Plug 'garyburd/go-explorer'
 Plug 'elzr/vim-json'
 Plug 'JamshedVesuna/vim-markdown-preview'
+Plug 'altercation/vim-colors-solarized'
 call plug#end()
+
+:imap jk <Esc>
+:vmap jk <Esc>
+
+let mapleader=","
+
+set background=dark
+let g:solarized_termtrans = 1
+colorscheme solarized
+
+"Cljfmt settings
+let g:clj_fmt_autosave = 0
+
+"Paraedit settings
+let g:paredit_leader = ','
+let g:paredit_electric_return=0
 
 "Begin YouCompleteMe settings
 "========================

@@ -4,3 +4,4 @@ end
 
 set -g -x PATH /usr/local/bin $PATH
 set -g -x GOPATH ~/go
+set -g -x  VAULT_ADDR "https://vault.amperity.top:8200"
