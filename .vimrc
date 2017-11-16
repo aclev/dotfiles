@@ -18,11 +18,12 @@ Plug 'guns/vim-clojure-static'
 Plug 'tpope/vim-fireplace'
 Plug 'venantius/vim-cljfmt'
 Plug 'venantius/vim-eastwood'
-Plug 'kien/rainbow_parentheses.vim'
+Plug 'guns/vim-clojure-highlight'
 Plug 'vim-scripts/paredit.vim'
-Plug 'tpope/vim-salve'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-salve'
 Plug 'garyburd/go-explorer'
 Plug 'elzr/vim-json'
 Plug 'JamshedVesuna/vim-markdown-preview'
@@ -41,9 +42,33 @@ colorscheme solarized
 "Cljfmt settings
 let g:clj_fmt_autosave = 0
 
+" Custom syntax highlighting for trailing whitespace
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
+
+nnoremap <Leader>wn :match ExtraWhitespace /^\s* \s*\<Bar>\s\+$/<CR>
+nnoremap <Leader>wf :match<CR>
+
+" Fireplace fires FireplaceEvalPost and FireplaceEvalPre
+" Even though it does it as silent because vim-eastwood redirects the output
+" comes in though the eastwood calls (No matching autocommand)...
+" So, just make them do nothing...
+
+augroup fireplace
+    autocmd!
+    "autocmd User FireplacePreConnect <Nop>
+    "autocmd User FireplaceEvalPost <Nop>
+augroup END
+
+
 "Paraedit settings
 let g:paredit_leader = ','
 let g:paredit_electric_return=0
+map <leader>tp :call PareditToggle()<CR>
 
 "Begin YouCompleteMe settings
 "========================
@@ -87,7 +112,7 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go', 'clojure'] }
 let g:syntastic_clojure_checkers = ['eastwood']
 
 nmap <silent> <A-j> :wincmd j<CR> 
@@ -100,14 +125,17 @@ nmap <silent> <A-l> :wincmd l<CR>
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'go', 'objc']
 let vim_markdown_preview_github=1
 let vim_markdown_preview_browser='Google Chrome'
-" Preview on write
-let vim_markdown_preview_toggle=2
 
 "Change vim windows
 nmap <silent> <A-j> :wincmd j<CR> 
 nmap <silent> <A-l> :wincmd k<CR> 
 nmap <silent> <A-h> :wincmd h<CR> 
 nmap <silent> <A-l> :wincmd l<CR> 
+
+"Paste mode toggling
+nnoremap <F2> :set invpaste paste?<CR>
+set pastetoggle=<F2>
+set showmode
 
 "Change working directory
 map <C-c><C-d> :cd %:p:h
