@@ -1252,14 +1252,16 @@
 		<key>TB Is Shown</key>
 		<integer>1</integer>
 	</dict>
+	<key>NSWindow Frame NSFontPanel</key>
+	<string>-1111 291 445 103 -1920 -30 1920 1080 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>530 494 620 392 0 0 1680 1050 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>-1663 239 918 381 -1920 -30 1920 1080 </string>
+	<string>202 234 918 485 0 0 1680 1050 </string>
 	<key>NSWindow Frame UKCrashReporter</key>
 	<string>-1765 443 592 584 -1920 -30 1920 1057 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>462 490 710 417 0 0 1680 1027 </string>
+	<string>0 0 710 447 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>212 101 570 452 0 0 1680 1027 </string>
 	<key>NeverWarnAboutShortLivedSessions_39E0439D-BF69-4D58-B4FF-E31632A10624</key>
@@ -1885,7 +1887,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-08-28T23:24:18Z</date>
+	<date>2017-11-20T02:17:13Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SavePasteHistory</key>
@@ -1958,7 +1960,9 @@
 	<integer>0</integer>
 	<key>WordCharacters</key>
 	<string>/-+\~_.</string>
+	<key>findMode_iTerm</key>
+	<integer>0</integer>
 	<key>iTerm Version</key>
-	<string>3.1.beta.7</string>
+	<string>3.1.2.beta.2</string>
 </dict>
 </plist>
