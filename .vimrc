@@ -5,7 +5,7 @@ set number
 set tabstop=4
 set shiftwidth=4
 set expandtab
-set backspace=2 
+set backspace=2
 "set background=dark
 
 "Begin VimPlug
@@ -15,19 +15,19 @@ Plug 'fatih/vim-go'
 Plug 'scrooloose/syntastic'
 Plug 'Valloric/YouCompleteMe', {'do' : './install.py --gocode-completer'}
 Plug 'guns/vim-clojure-static'
-Plug 'tpope/vim-fireplace'
-Plug 'venantius/vim-cljfmt'
-Plug 'venantius/vim-eastwood'
 Plug 'guns/vim-clojure-highlight'
 Plug 'vim-scripts/paredit.vim'
+Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-salve'
+Plug 'tpope/vim-dispatch'
 Plug 'garyburd/go-explorer'
 Plug 'elzr/vim-json'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'altercation/vim-colors-solarized'
+Plug 'kien/rainbow_parentheses.vim'
 call plug#end()
 
 :imap jk <Esc>
@@ -39,8 +39,15 @@ set background=dark
 let g:solarized_termtrans = 1
 colorscheme solarized
 
+autocmd VimEnter *       RainbowParenthesesToggle
+autocmd Syntax   clojure RainbowParenthesesLoadRound
+autocmd Syntax   clojure RainbowParenthesesLoadSquare
+autocmd Syntax   clojure RainbowParenthesesLoadBraces
+
 "Cljfmt settings
 let g:clj_fmt_autosave = 0
+
+
 
 " Custom syntax highlighting for trailing whitespace
 highlight ExtraWhitespace ctermbg=red guibg=red
@@ -115,10 +122,10 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go', 'clojure'] }
 let g:syntastic_clojure_checkers = ['eastwood']
 
-nmap <silent> <A-j> :wincmd j<CR> 
-nmap <silent> <A-l> :wincmd k<CR> 
-nmap <silent> <A-h> :wincmd h<CR> 
-nmap <silent> <A-l> :wincmd l<CR> 
+nmap <silent> <A-j> :wincmd j<CR>
+nmap <silent> <A-l> :wincmd k<CR>
+nmap <silent> <A-h> :wincmd h<CR>
+nmap <silent> <A-l> :wincmd l<CR>
 
 
 " Markdown settings
@@ -127,10 +134,10 @@ let vim_markdown_preview_github=1
 let vim_markdown_preview_browser='Google Chrome'
 
 "Change vim windows
-nmap <silent> <A-j> :wincmd j<CR> 
-nmap <silent> <A-l> :wincmd k<CR> 
-nmap <silent> <A-h> :wincmd h<CR> 
-nmap <silent> <A-l> :wincmd l<CR> 
+nmap <silent> <A-j> :wincmd j<CR>
+nmap <silent> <A-l> :wincmd k<CR>
+nmap <silent> <A-h> :wincmd h<CR>
+nmap <silent> <A-l> :wincmd l<CR>
 
 "Paste mode toggling
 nnoremap <F2> :set invpaste paste?<CR>
