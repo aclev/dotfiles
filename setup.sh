@@ -4,13 +4,13 @@
 DOTFILES=~/.dotfiles
 
 # All of the packages that are installed via brew.
-BREW_PACKAGES=(fish vault awscli tmux leiningen go cmake reattach-to-user-namespace jq watch grip)
+BREW_PACKAGES=(fish nvim vault awscli tmux leiningen go cmake reattach-to-user-namespace jq watch grip rlwrap)
 
 isBrewPackageInstalled()
 {
     p=$1
-    if [ $p == "leiningen" ]; then 
-        p=lein 
+    if [ $p == "leiningen" ]; then
+        p=lein
     fi
     if [ $p == "awscli" ]; then
         p=aws
@@ -19,14 +19,6 @@ isBrewPackageInstalled()
     return $?
 }
 
-if [ ! -e /Applications/iTerm.app ]; then
-    echo "Could not find iTerm, downloading"
-    curl -o ~/iterm.zip https://iterm2.com/downloads/stable/iTerm2-3_0_15.zip
-    unzip ~/iterm.zip
-    mv ~/iTerm.app /Applications/iTerm.app
-    rm ~/iterm.*
-    echo "Installed iTerm"
-fi
 
 if [ ! -e /Applications/Docker.app ]; then
     echo "Could not find Docker, downloading"
@@ -38,12 +30,26 @@ if [ ! -e /Applications/Docker.app ]; then
     echo "Installed docker to appliations folder"
 fi
 
-# Make iterm read preferences from the dotfiles dir instead of /Application Support
-# iTerm2 just checks in the user defaults for LoadPrefsFromCustomFolder, which doesn't 
-# exist if false.  So just check to make sure that default is set, if it isn't set it
-# and also set the location of the settings file 
+# Install pip
 
-defaults read com.googlecode.iterm2.plist LoadPrefsFromCustomFolder | grep "0" 2> /dev/null 
+if ! which pip 1> /dev/null ; then
+    echo "Pip Install installed, installing it.  It will required a passwrod"
+    sudo easy_install pip
+fi
+
+# Neovim python support.
+
+if [ ! -e ~/Library/Python/2.7/lib/python/site-packages/neovim ]; then
+    echo "Couldn't find nvim install"
+    pip2 install --user neovim
+fi
+
+# Make iterm read preferences from the dotfiles dir instead of /Application Support
+# iTerm2 just checks in the user defaults for LoadPrefsFromCustomFolder, which doesn't
+# exist if false.  So just check to make sure that default is set, if it isn't set it
+# and also set the location of the settings file
+
+defaults read com.googlecode.iterm2.plist LoadPrefsFromCustomFolder | grep "0" 2> /dev/null
 if [ $? == 0 ]; then
     echo "Iterm isn't reading from settings directory, setting it to read from ~/.dotfiles/settings/ now"
     defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder 1
@@ -55,6 +61,12 @@ if [ ! -x /usr/local/bin/brew ]; then
     echo "Could not find brew, installing"
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     echo "Installed brew"
+fi
+
+if [ ! -e /Applications/iTerm.app ]; then
+    echo "Couldn't find iTerm, installing"
+    brew cask install iterm
+    echo "Installed iterm"
 fi
 
 if which vim | grep '/usr/bin/vim'; then
@@ -69,7 +81,7 @@ if [ ! -f ~/.vim/autoload/plug.vim ]; then
     echo "installed vim plug"
 fi
 
-if [ which omf 2> /dev/null ]; then
+if [ ! -e ~/.config/omf ]; then
     echo "Could not find oh my fish, installing"
     curl -L http://get.oh-my.fish | fish
     echo "Installed oh my fish"
