@@ -21,15 +21,16 @@ Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-salve'
 Plug 'tpope/vim-dispatch'
 Plug 'garyburd/go-explorer'
 Plug 'elzr/vim-json'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'altercation/vim-colors-solarized'
-Plug 'kien/rainbow_parentheses.vim'
+Plug 'junegunn/rainbow_parentheses.vim'
 call plug#end()
 
+
+:set statusline=%f\ %Y\ Col:\ %c\ File-Len:\ %L
 :imap jk <Esc>
 :vmap jk <Esc>
 
@@ -39,15 +40,12 @@ set background=dark
 let g:solarized_termtrans = 1
 colorscheme solarized
 
-autocmd VimEnter *       RainbowParenthesesToggle
-autocmd Syntax   clojure RainbowParenthesesLoadRound
-autocmd Syntax   clojure RainbowParenthesesLoadSquare
-autocmd Syntax   clojure RainbowParenthesesLoadBraces
-
 "Cljfmt settings
 let g:clj_fmt_autosave = 0
 
-
+"Rainbow Parens
+let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
+call g:rainbow_parentheses#activate()
 
 " Custom syntax highlighting for trailing whitespace
 highlight ExtraWhitespace ctermbg=red guibg=red
@@ -82,17 +80,19 @@ map <leader>tp :call PareditToggle()<CR>
 "
 
 let g:ycm_server_use_vim_stdout = 0
-let g:ycm_server_keep_logfiles = 1
+"let g:ycm_server_keep_logfiles = 1
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g   :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:ycm_semantic_triggers = {'clojure' : ['/', '(', "."]}
+
 "End YouCompleteMe settings
 "========================
 
 "enable folding
 set foldmethod=indent
 set foldlevel=99
-set shell=bash
+set shell=fish
+set hidden
 "some bell thing for MavVim, not sure what is does
 set vb
 
