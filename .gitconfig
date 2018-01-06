@@ -22,9 +22,6 @@
     cat = cat-file
     ll = log --oneline --graph
     ls = ls-files
-[core]
-    excludesfile = ~/.gitignore-global
-    whitespace=trailing-space,cr-at-eol,space-before-tab,tab-in-indent
 [color]
     ui = auto
     diff = auto
@@ -36,15 +33,13 @@
     remote = green
 [color "diff"]
     whitespace = red reverse
-    frag = cyan
-    old = red bold
-    new = green bold
+    frag = blue
+    old = red
+    new = green
 [color "status"]
     added = green
     changed = yellow
     untracked = red
-[apply]
-    whitespace = nowarn
 [push]
     default = tracking
 [branch]
