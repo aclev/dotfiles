@@ -6,31 +6,35 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 set backspace=2
-"set background=dark
 
 "Begin VimPlug
 call plug#begin("$HOME/.vim/plugged/")
+Plug 'ervandew/supertab'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'fatih/vim-go'
-Plug 'scrooloose/syntastic'
-Plug 'Valloric/YouCompleteMe', {'do' : './install.py --gocode-completer'}
+Plug 'vim-syntastic/syntastic'
 Plug 'guns/vim-clojure-static'
 Plug 'guns/vim-clojure-highlight'
 Plug 'vim-scripts/paredit.vim'
 Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-dispatch'
 Plug 'garyburd/go-explorer'
+Plug 'racer-rust/vim-racer'
+Plug 'rust-lang/rust.vim'
+Plug 'timonv/vim-cargo'
 Plug 'elzr/vim-json'
 Plug 'JamshedVesuna/vim-markdown-preview'
+Plug 'iamcco/markdown-preview.vim'
 Plug 'altercation/vim-colors-solarized'
 Plug 'junegunn/rainbow_parentheses.vim'
 call plug#end()
 
 
 :set statusline=%f\ %Y\ Col:\ %c\ File-Len:\ %L
+
 :imap jk <Esc>
 :vmap jk <Esc>
 
@@ -40,8 +44,6 @@ set background=dark
 let g:solarized_termtrans = 1
 colorscheme solarized
 
-"Cljfmt settings
-let g:clj_fmt_autosave = 0
 
 "Rainbow Parens
 let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
@@ -58,43 +60,28 @@ autocmd BufWinLeave * call clearmatches()
 nnoremap <Leader>wn :match ExtraWhitespace /^\s* \s*\<Bar>\s\+$/<CR>
 nnoremap <Leader>wf :match<CR>
 
-" Fireplace fires FireplaceEvalPost and FireplaceEvalPre
-" Even though it does it as silent because vim-eastwood redirects the output
-" comes in though the eastwood calls (No matching autocommand)...
-" So, just make them do nothing...
-
-augroup fireplace
-    autocmd!
-    "autocmd User FireplacePreConnect <Nop>
-    "autocmd User FireplaceEvalPost <Nop>
-augroup END
-
 
 "Paraedit settings
 let g:paredit_leader = ','
 let g:paredit_electric_return=0
 map <leader>tp :call PareditToggle()<CR>
 
-"Begin YouCompleteMe settings
-"========================
-"
-
-let g:ycm_server_use_vim_stdout = 0
-"let g:ycm_server_keep_logfiles = 1
-let g:ycm_autoclose_preview_window_after_completion=1
-map <leader>g   :YcmCompleter GoToDefinitionElseDeclaration<CR>
-let g:ycm_semantic_triggers = {'clojure' : ['/', '(', "."]}
-
-"End YouCompleteMe settings
-"========================
-
 "enable folding
 set foldmethod=indent
 set foldlevel=99
 set shell=fish
 set hidden
-"some bell thing for MavVim, not sure what is does
 set vb
+
+"Rust stuff
+"==========
+let g:racer_cmd = "~/.cargo/bin/racer"
+let g:racer_experimental_completer = 1
+
+au FileType rust nmap gd <Plug>(rust-def)
+au FileType rust nmap gs <Plug>(rust-def-split)
+au FileType rust nmap gx <Plug>(rust-def-vertical)
+au FileType rust nmap <leader>gd <Plug>(rust-doc)
 
 "GoLang Stuff
 "===========
@@ -119,7 +106,7 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go', 'clojure'] }
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go', 'clojure']}
 let g:syntastic_clojure_checkers = ['eastwood']
 
 nmap <silent> <A-j> :wincmd j<CR>
@@ -129,9 +116,8 @@ nmap <silent> <A-l> :wincmd l<CR>
 
 
 " Markdown settings
-let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'go', 'objc']
-let vim_markdown_preview_github=1
-let vim_markdown_preview_browser='Google Chrome'
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'go', 'objc', 'clojure']
+let vim_markdown_preview_browser='FireFox'
 
 "Change vim windows
 nmap <silent> <A-j> :wincmd j<CR>
@@ -148,5 +134,38 @@ set showmode
 map <C-c><C-d> :cd %:p:h
 map <C-l><C-c><C-d> :lcd %:p:h
 
+"Cljstyle
+function! Cljstyle()
+    let cwd = getcwd()
+    let winsave = winsaveview()
+    execute "cd" . expand('%:p:h')
+
+    :%!cljstyle pipe
+
+    execute "cd" . cwd
+    call winrestview(winsave)
+
+endfunction
+
+command! Cljstyle :undojoin | call Cljstyle()
+
+autocmd BufWritePre *.cl* Cljstyle
+
+map <leader>fc :Cljstyle <cr>
+
 "Format Json
 map <leader>fj :%!python -m json.tool<cr>
+
+
+" auto-complete
+let g:SuperTabDefaultCompletionType="context"
+au FileType clojure let b:SuperTabCompletionContexts =
+  \ ['ClojureContext'] + g:SuperTabCompletionContexts
+function! ClojureContext()
+  let curline = getline('.')
+  let cnum = col('.')
+  let synname = synIDattr(synID(line('.'), cnum - 1, 1), 'name')
+  if curline =~ '(\S\+\%' . cnum . 'c' && synname !~ '\(String\|Comment\)'
+    return "\<c-x>\<c-o>"
+  endif
+endfunction

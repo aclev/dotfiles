@@ -30,7 +30,6 @@
     interactive = auto
     current = yellow reverse
     local = yellow
-    remote = green
 [color "diff"]
     whitespace = red reverse
     frag = blue
@@ -69,6 +68,6 @@
     pruneExpire = 3 months ago
 [user]
 	name = Ace Levenberg
-	email = acelevenberg@gmail.com
+	email = ace@amperity.com
 [code]
-	editor = vim
+	editor = nvim

@@ -1,6 +1,14 @@
-{:user {:plugins [[cider/cider-nrepl "0.14.0" :exclusions [org.clojure/tools.nrepl]]
-                  #_[lein-cljfmt "0.5.7" :exclusions [org.clojure/clojure]]
-                  #_[jonase/eastwood "0.2.1" :exclusions [org.clojure/clojure]]
-                  [lein-monolith "1.0.1"]]
-        :dependencies [ [cljfmt "0.5.1" :exclusions [org.clojure/clojurescript org.clojure/clojure]] [jonase/eastwood "0.2.1" :exclusions [org.clojure/clojure]]]
-        :repl-options { #_#_:init (require `cljfmt) :timeout 1200000}}}
+{:user
+ {:repositories [["amperity" {:url "https://s3-us-west-2.amazonaws.com/amperity-static-packages/jars/"
+                              :snapshots false}]]
+  :plugins [[lein-monolith "1.0.1"]
+            [lein-cloverage "1.0.13"]
+            [amperity/lein-cljfmt "0.7.0-SNAPSHOT"]
+            [cider/cider-nrepl "0.21.1" :exclusions [org.clojure/tools.logging]]]
+  :dependencies [[cider/cider-nrepl "0.21.1" :exclusions [org.clojure/tools.logging]]
+                 [mvxcvi/whidbey "2.1.0"]
+                 [amperity/lein-cljfmt "0.7.0-SNAPSHOT"]
+                 [pjstadig/humane-test-output "0.8.3"]
+                 [criterium "0.4.5"]]
+  :injections [(require 'pjstadig.humane-test-output)
+               (pjstadig.humane-test-output/activate!)]}}
